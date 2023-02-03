@@ -7,7 +7,7 @@
  * @author ola
  *
  * If you add code here, add yourself as @author below
- *
+ * @author Eunice Lee
  *
  */
 public class CelestialBody {
@@ -30,7 +30,12 @@ public class CelestialBody {
 	 */
 	public CelestialBody(double xp, double yp, double xv,
 			             double yv, double mass, String filename){
-		// TODO: complete constructor
+		myXPos = xp;
+		myYPos = yp;
+		myXVel = xv;
+		myYVel = yv;
+		myMass = mass;
+		myFileName = filename;
 
 	}
 
@@ -40,7 +45,7 @@ public class CelestialBody {
 	 */
 	public double getX() {
 		// TODO: complete method
-		return 0.0;
+		return myXPos;
 	}
 
 	/**
@@ -49,7 +54,7 @@ public class CelestialBody {
 	 */
 	public double getY() {
 		// TODO: complete method
-		return 0.0;
+		return myYPos;
 	}
 
 	/**
@@ -58,7 +63,7 @@ public class CelestialBody {
 	 */
 	public double getXVel() {
 		// TODO: complete method
-		return 0.0;
+		return myXVel;
 	}
 	/**
 	 * Return y-velocity of this Body.
@@ -66,7 +71,7 @@ public class CelestialBody {
 	 */
 	public double getYVel() {
 		// TODO: complete method
-		return 0.0;
+		return myYVel;
 	}
 
 	/**
@@ -75,7 +80,7 @@ public class CelestialBody {
 	 */
 	public double getMass() {
 		// TODO: complete method
-		return 5.0;
+		return myMass;
 	}
 
 	/**
@@ -84,7 +89,7 @@ public class CelestialBody {
 	 */
 	public String getName() {
 		// TODO: complete method
-		return "cow-planet";
+		return myFileName;
 	}
 
 	/**
@@ -94,37 +99,59 @@ public class CelestialBody {
 	 */
 	public double calcDistance(CelestialBody b) {
 		// TODO: complete method
-		return 0.0;
+		return Math.sqrt(Math.pow(b.myXPos - myXPos, 2) + Math.pow(b.myYPos - myYPos, 2));
 	}
 
 	public double calcForceExertedBy(CelestialBody b) {
 		// TODO: complete method
-		return 0.0;
+		double G = 6.67*1e-11;
+		return (G * (myMass * b.myMass)) / Math.pow(calcDistance(b), 2);
 	}
 
 	public double calcForceExertedByX(CelestialBody b) {
 		// TODO: complete method
-		return 0.0;
+		return (calcForceExertedBy(b) * (b.myXPos - myXPos)) / calcDistance(b);
 	}
 	public double calcForceExertedByY(CelestialBody b) {
 		// TODO: complete method
-		return 0.0;
+		return (calcForceExertedBy(b) * (b.myYPos - myYPos)) / calcDistance(b);
 	}
 
 	public double calcNetForceExertedByX(CelestialBody[] bodies) {
 		// TODO: complete method
 		double sum = 0.0;
+		for (CelestialBody b : bodies) {
+			if (!b.equals(this)) {
+				sum = sum + calcForceExertedByX(b);
+			}
+		}
 		return sum;
 	}
 
 	public double calcNetForceExertedByY(CelestialBody[] bodies) {
+		// TODO: complete method
 		double sum = 0.0;
+		for (CelestialBody b : bodies) {
+			if (!b.equals(this)) {
+				sum = sum + calcForceExertedByY(b);
+			}
+		}
 		return sum;
 	}
 
 	public void update(double deltaT, 
 			           double xforce, double yforce) {
 		// TODO: complete method
+		double xAcceleration = xforce / myMass;
+		double yAcceleration = yforce / myMass;
+		double nvx = myXVel + (deltaT * xAcceleration);
+		double nvy = myYVel + (deltaT * yAcceleration);
+		double nx = myXPos + (deltaT * nvx);
+		double ny = myYPos + (deltaT * nvy);
+		myXPos = nx;
+		myYPos = ny;
+		myXVel = nvx;
+		myYVel = nvy;
 	}
 
 	/**
