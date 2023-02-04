@@ -1,5 +1,5 @@
 /**
- * @author YOUR NAME THE STUDENT IN 201
+ * @author Eunice Lee
  * 
  * Simulation program for the NBody assignment
  */
@@ -21,12 +21,9 @@ public class NBody {
 	
 		// TODO: read values at beginning of file to
 		// find the radius
-
-		double rad = 0.0;
-		
+		s.nextInt();
+		double rad = s.nextDouble();
 		s.close();
-		
-
 		return rad;
 	}
 	
@@ -42,23 +39,27 @@ public class NBody {
 		Scanner s = new Scanner(new File(fname));
 			
 		// TODO: read # bodies, store in nb
-
-		int nb = 0;          // # bodies to be read
+		CelestialBody[] bodies = new CelestialBody[s.nextInt()];
+		s.nextDouble();
+		int nb = bodies.length;          // # bodies to be read
 
 		// TODO: Create array that can store nb CelestialBodies
 		// TODO: read and ignore radius
+		
 
 		for(int k=0; k < nb; k++) {
 
 			// TODO: read data for each body
 			// TODO: construct new body object and add to array
+			CelestialBody planets = new CelestialBody(s.nextDouble(), s.nextDouble(), s.nextDouble(), s.nextDouble(), s.nextDouble(), s.next());
+			bodies[k] = planets;
 
 		}
 
 		s.close();
 
 		// TODO: return array of body objects read
-		return null;
+		return bodies;
 	}
 	public static void main(String[] args) throws FileNotFoundException{
 		double totalTime = 39447000.0;
@@ -85,20 +86,28 @@ public class NBody {
 			
 			// TODO: create double arrays xforces and yforces
 			//       to hold forces on each body
-
+			double[] xforces = new double[bodies.length];
+			double[] yforces = new double[bodies.length];
 
 			// TODO: in loop, calculate netForcesX and netForcesY and store in
 			//       arrays xforces and yforces for each object in bodies
 
-			for(int k=0; k < bodies.length; k++) {
+			int countNet = 0;
+			for(CelestialBody b : bodies) {
 				// code here
+				xforces[countNet] = b.calcNetForceExertedByX(bodies);
+				yforces[countNet] = b.calcNetForceExertedByY(bodies);
+				countNet++;
   			}
 
 			// TODO: loop over all bodies and call update
 			//       with dt and corresponding xforces and yforces arrays
 
-			for(int k=0; k < bodies.length; k++){
+			int countForce = 0;
+			for(CelestialBody b : bodies){
 				// code here
+				b.update(dt, xforces[countForce], yforces[countForce]);
+				countForce++;
 			}
 
 			StdDraw.clear();
@@ -108,6 +117,7 @@ public class NBody {
 
 			for(CelestialBody b : bodies){
 				// code here
+				b.draw();
 			}
 			StdDraw.show();
 			StdDraw.pause(10);
